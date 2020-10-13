@@ -19,6 +19,48 @@
 
 We present a unified library for MQ sensors, this library allows to read MQ signals easily from Arduino, Genuino, ESP8266, ESP-32 boards whose references are MQ2, MQ3, MQ4, MQ5, MQ6, MQ7, MQ8, MQ9, MQ131, MQ135, MQ303A, MQ309A.
 
+MQ3（酒精传感器） 利用二氧化锡在高温下遇到酒精气体时，电阻会急剧减小的原理制造，缺点：需要预热，稳定性较差，受环境温度、湿度等因素影响较大；每一种传感器的选择性都不是唯一的，输出参数也不能确定，不宜应用于计量准确要求的场所。
+
+以PPM的输出为标准，PPM应该是 Parts per million的缩写，与酒精测试仪的兑换方法：
+
+清洁空气 = 0.04/L
+
+此时电压 = 0.5v，用 0.4/0.5 = 0.8
+
+用 0.8 * 酒精电压 = 结果
+
+我使用的几元钱的传感器，数据
+
+```
+规格参数
+1. 探测范围：10~1000ppm酒精
+2. 特征气体：125ppm酒精
+3. 加热电压：5±0.2V（AC·DC）
+4. 回路电压：≤24V    DC
+5. 负载电阻：可调
+6. 清洁空气中电压：≤1.5V 
+7. 灵敏度：Rin air/Rin typical gas≥5
+8. 响应时间：≤10S
+9. 恢复时间：≤30S
+10.元件功耗：≤0.9W
+11.主要芯片：LM393、MQ-3气体传感器
+12.使用寿命：5年
+
+电气性能
+
+主要芯片：LM393、MQ-3气体传感器
+
+输入电压：DC5V 功耗（电流）：150mA
+
+DO输出：TTL数字量0和1（0.1和5V）
+
+AO输出：0.1-0.3V（相对无污染），最高浓度电压4V左右
+
+特别提醒：传感器通电后，需要预热20S左右，测量的数据才稳定，传感器发热属于正常现象，因为内部有电热丝，如果烫手就不正常了。
+```
+
+我们提供一个统一的MQ系列传感器库，这个库允许简单的从arduino,genuino,esp8266,esp-32开发板上简单的读取mq传感器信号。包括：MQ2, MQ3, MQ4, MQ5, MQ6, MQ7, MQ8, MQ9, MQ131, MQ135, MQ303A, MQ309A.
+
 <!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
@@ -61,17 +103,24 @@ float ppmCH4 = MQ4.readSensor();
 ## Wiring
 ### Sensor
 #### Important points:
-##### Points you should identify
+##### Points you should identify （需要注意的几点）
 * VCC -> 5V Power supply (+) wire
 * GND -> GND Ground (-) wire
 * AO -> Analog Output of the sensor
-##### Data of board that you should have
-* RL Value in KOhms
+##### Data of board that you should have （你需要知道开发板中）
+* RL Value in KOhms （阻抗中的RL值）
 ##### Graph
 ![Wiring_MQSensor](https://raw.githubusercontent.com/miguel5612/MQSensorsLib_Docs/master/static/img/Points_explanation.jpeg)
-#### RS/R0 value (From datasheet of your sensor)
+#### RS/R0 value (From datasheet of your sensor 来自传感器数据表)
+
+RS = 传感器在不同浓度气体中的电阻值
+
+R0 = 传感器在洁净传感器中的电阻值
+
+RS/R0 = 计算电阻比
+
 * RS/R0 (Clean air - English) -> (Aire puro - Spanish)
-* **Note**: RS/R0 is equal to Ratio variable on the program
+* **Note**: RS/R0 is equal to Ratio variable on the program 等于程序上的比率变量
 ![Graph from datasheet](https://raw.githubusercontent.com/miguel5612/MQSensorsLib_Docs/master/static/img/Graph_Explanation.jpeg)
 ### Arduino
 ![Arduino_Wiring_MQSensor](https://raw.githubusercontent.com/miguel5612/MQSensorsLib_Docs/master/static/img/MQ_Arduino.PNG)
